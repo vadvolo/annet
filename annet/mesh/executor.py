@@ -24,10 +24,10 @@ logger = getLogger(__name__)
 
 @dataclass(frozen=True)
 class TargetInterface:
-    subif: Union[int, None] = None
-    svi: Union[int, None] = None
-    lag: Union[int, None] = None
-    port: Union[str, None] = None
+    subif: int | None = None
+    svi: int | None = None
+    lag: int | None = None
+    port: str | None = None
 
 
 @dataclass(frozen=True)

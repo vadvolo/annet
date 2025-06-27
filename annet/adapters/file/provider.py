@@ -1,6 +1,6 @@
 import dataclasses
 from dataclasses import dataclass, fields
-from typing import Any, Iterable, List, Optional, Sequence, Union
+from typing import Any, Iterable, List, Optional, Sequence
 
 import yaml
 
@@ -168,7 +168,7 @@ class Query(Query):
     query: List[str]
 
     @classmethod
-    def new(cls, query: Union[str, Iterable][str], hosts_range: Optional[slice] = None) -> "Query":
+    def new(cls, query: str | Iterable[str], hosts_range: Optional[slice] = None) -> "Query":
         if hosts_range is not None:
             raise ValueError("host_range is not supported")
         return cls(query=list(query))
@@ -218,7 +218,7 @@ class FS(Storage):
 
     def make_devices(
         self,
-        query: Union[Query, list],
+        query: Query | list,
         preload_neighbors=False,
         use_mesh=None,
         preload_extra_fields=False,

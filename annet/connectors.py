@@ -81,6 +81,7 @@ def load_entry_point(group: str, name: str):
         ep = [item for item in entry_points().get(group, []) if item.name == name]
     else:
         ep = entry_points(group=group, name=name)  # pylint: disable=unexpected-keyword-arg
+        
     if not ep:
         return []
     return [item.load() for item in ep]

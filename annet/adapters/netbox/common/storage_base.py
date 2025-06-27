@@ -1,7 +1,7 @@
 import ssl
 from ipaddress import ip_interface
 from logging import getLogger
-from typing import Any, Optional, List, Union, Dict, cast, Generic, TypeVar
+from typing import Any, Optional, List, Dict, cast, Generic, TypeVar
 
 from annetbox.v37 import models as api_models
 
@@ -92,7 +92,7 @@ class BaseNetboxStorage(
 
     def make_devices(
             self,
-            query: Union[NetboxQuery, list],
+            query: NetboxQuery | list,
             preload_neighbors=False,
             use_mesh=None,
             preload_extra_fields=False,

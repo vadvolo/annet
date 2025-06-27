@@ -3,7 +3,7 @@ from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, List, Union
+from typing import Optional, List
 
 from annet.rpl import RoutingPolicy, PrefixMatchValue, OrLonger
 
@@ -45,7 +45,7 @@ class AsPathFilter:
 
 @dataclass
 class IpPrefixListMember:
-    prefix: Union[IPv4Network, IPv6Network]
+    prefix: IPv4Network | IPv6Network
     or_longer: OrLonger = (None, None)
 
     def __post_init__(self):
@@ -65,7 +65,7 @@ class IpPrefixList:
 
 def ip_prefix_list(
         name: str,
-        members_or_str: Sequence[Union[IpPrefixListMember, str]],
+        members_or_str: Sequence[IpPrefixListMember | str],
         or_longer: OrLonger = (None, None),
 ) -> IpPrefixList:
     members: List[IpPrefixListMember] = []

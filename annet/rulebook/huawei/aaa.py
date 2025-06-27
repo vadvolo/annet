@@ -3,7 +3,6 @@ from collections import defaultdict
 from annet.annlib.types import Op
 
 from annet.rulebook.common import default, default_diff
-from typing import Union
 
 
 def user(key, diff, **_):
@@ -35,7 +34,7 @@ def _added_contains(array: list[dict], lookup_string: str) -> bool:
 
 def domain(rule, key, diff, **_):
     """
-    При удалении метода для Union[accounting, authorization]|authentication
+    При удалении метода для accounting|authorization|authentication
     не нужно указывать сам метод, поэтому откидываем последний ключ.
     """
     if diff[Op.REMOVED]:

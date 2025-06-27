@@ -7,7 +7,6 @@ from annetbox.v41 import models as api_models
 from annet.adapters.netbox.common.adapter import NetboxAdapter, get_device_breed, get_device_hw
 from annet.adapters.netbox.common.storage_base import BaseNetboxStorage
 from annet.adapters.netbox.v41.models import (
-from typing import Union
     InterfaceV41, IpAddressV41, NetboxDeviceV41, PrefixV41,
     FHRPGroupV41, FHRPGroupAssignmentV41,
 )
@@ -23,7 +22,7 @@ class NetboxV41Adapter(NetboxAdapter[
             storage: Storage,
             url: str,
             token: str,
-            ssl_context: ssl.Union[SSLContext, None],
+            ssl_context: ssl.SSLContext | None,
             threads: int,
     ):
         self.netbox = client_sync.NetboxV41(url=url, token=token, ssl_context=ssl_context, threads=threads)
@@ -120,7 +119,7 @@ class NetboxStorageV41(BaseNetboxStorage[
             self,
             url: str,
             token: str,
-            ssl_context: ssl.Union[SSLContext, None],
+            ssl_context: ssl.SSLContext | None,
             threads: int,
     ) -> NetboxAdapter[NetboxDeviceV41, InterfaceV41, IpAddressV41, PrefixV41, FHRPGroupV41, FHRPGroupAssignmentV41]:
         return NetboxV41Adapter(self, url, token, ssl_context, threads)

@@ -4,7 +4,7 @@ import json
 import re
 import textwrap
 from collections import OrderedDict as odict
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Tuple, List, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, Tuple, List
 
 from annet.annlib.types import Op
 
@@ -316,7 +316,7 @@ class CiscoFormatter(BlockExitFormatter):
         block_exit_strings = [self._block_exit]
 
         # hide banner content
-        pattern = re.compile(r"((^banner [a-z-]+) \^C.*?\^C)", flags=re.Union[MULTILINE, re].DOTALL)
+        pattern = re.compile(r"((^banner [a-z-]+) \^C.*?\^C)", flags=re.MULTILINE | re.DOTALL)
         repl_map = {replace_str: banner_str for banner_str, replace_str in pattern.findall(text)}
         for replace_str, banner in repl_map.items():
             text = text.replace(banner, replace_str)

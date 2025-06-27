@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import cast, List, Union, Iterable, Optional, TypedDict
+from typing import cast, List, Iterable, Optional, TypedDict
 
 from annet.storage import Query
 
@@ -24,7 +24,7 @@ class NetboxQuery(Query):
 
     @classmethod
     def new(
-            cls, query: Union[str, Iterable[str]],
+            cls, query: str | Iterable[str],
             hosts_range: Optional[slice] = None,
     ) -> "NetboxQuery":
         if hosts_range is not None:

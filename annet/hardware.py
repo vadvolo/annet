@@ -25,7 +25,7 @@ class HardwareProvider(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def hw_to_vendor(self, hw: Any) -> Union[str, None]:
+    def hw_to_vendor(self, hw: Any) -> str | None:
         pass
 
 
@@ -36,7 +36,7 @@ class AnnetHardwareProvider(HardwareProvider):
     def vendor_to_hw(self, vendor: str) -> HardwareView:
         return registry_connector.get().get(vendor.lower()).hardware
 
-    def hw_to_vendor(self, hw: HardwareView) -> Union[str, None]:
+    def hw_to_vendor(self, hw: HardwareView) -> str | None:
         if vendor := registry_connector.get().match(hw, None):
             return vendor.NAME
         return None

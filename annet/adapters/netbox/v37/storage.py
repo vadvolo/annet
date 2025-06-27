@@ -7,8 +7,8 @@ from annetbox.v37 import models as api_models, client_sync
 from annet.adapters.netbox.common.adapter import NetboxAdapter, get_device_breed, get_device_hw
 from annet.adapters.netbox.common.storage_base import BaseNetboxStorage
 from annet.storage import Storage
-from .models import (
 from typing import Union
+from .models import (
     IpAddressV37, NetboxDeviceV37, InterfaceV37, PrefixV37,
     FHRPGroupAssignmentV37, FHRPGroupV37,
 )
@@ -22,7 +22,7 @@ class NetboxV37Adapter(NetboxAdapter[
             storage: Storage,
             url: str,
             token: str,
-            ssl_context: ssl.Union[SSLContext, None],
+            ssl_context: ssl.SSLContext | None,
             threads: int,
     ):
         self.netbox = client_sync.NetboxV37(url=url, token=token, ssl_context=ssl_context, threads=threads)
@@ -118,7 +118,7 @@ class NetboxStorageV37(BaseNetboxStorage[
             self,
             url: str,
             token: str,
-            ssl_context: ssl.Union[SSLContext, None],
+            ssl_context: ssl.SSLContext | None,
             threads: int,
     ) -> NetboxAdapter[NetboxDeviceV37, InterfaceV37, IpAddressV37, PrefixV37, FHRPGroupV37, FHRPGroupAssignmentV37]:
         return NetboxV37Adapter(self, url, token, ssl_context, threads)

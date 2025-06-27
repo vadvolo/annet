@@ -53,6 +53,23 @@ curl -X POST "http://localhost:8000/api/v1/gen" \
   }'
 ```
 
+```bash
+curl -X POST "http://localhost:8181/api/v1/gen" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "query": {
+    "query": [
+      "lab-r1.nh.com"
+    ],
+    "hosts_range": ""
+  },
+  "options": {
+    "config": "running",
+    "parallel": 1
+  }
+}'
+```
+
 ### Показать diff
 
 ```bash
@@ -60,6 +77,16 @@ curl -X POST "http://localhost:8000/api/v1/diff" \
   -H "Content-Type: application/json" \
   -d '{
     "query": ["router1"],
+    "config": "running",
+    "show_rules": true
+  }'
+```
+
+```bash
+curl -X POST "http://localhost:8181/api/v1/diff" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": ["lab-r1"],
     "config": "running",
     "show_rules": true
   }'

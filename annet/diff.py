@@ -221,7 +221,7 @@ class FrrFileDiffer(UnifiedFileDiffer):
             return self._diff_frr_conf(hw, old, new)
         return super().diff_file(hw, path, old, new)
 
-    def _diff_frr_conf(self, hw: HardwareView, old_text: Union[str, None], new_text: Union[str, None]) -> list[str]:
+    def _diff_frr_conf(self, hw: HardwareView, old_text: str | None, new_text: str | None) -> list[str]:
         """Calculate the differences for frr.conf files."""
         indent = "  "
         rb = rulebook.rulebook_provider_connector.get()

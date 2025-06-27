@@ -151,9 +151,10 @@ def _create_cli_args(query_data: DeviceQuery, options: GenerationOptions, args_c
     query = query_type.new(query_data.query, hosts_range=hosts_range)
     
     # Создаем объект аргументов
+    print("Создаем объект аргументов")
     args_dict = {
         'query': query,
-        'hosts_range': hosts_range,
+        'hosts_range': hosts_range or [],
         'config': options.config,
         'allowed_gens': options.allowed_gens or [],
         'excluded_gens': options.excluded_gens or [],
@@ -216,6 +217,7 @@ def _create_cli_args(query_data: DeviceQuery, options: GenerationOptions, args_c
         def __init__(self, **kwargs):
             for key, value in kwargs.items():
                 setattr(self, key, value)
+            self._enum_args = []
         
         def stdin(self, filter_acl=None, config=None):
             return {
@@ -246,7 +248,7 @@ async def health_check():
 async def generate_config(query: DeviceQuery, options: GenerationOptions):
     """
     Генерация конфигурации для устройств (аналог команды 'ann gen')
-    """
+    """    
     try:
         # Создаем аргументы CLI
         args = _create_cli_args(query, options, cli_args.ShowGenOptions)
