@@ -39,7 +39,7 @@ class PeerKey:
 
 
 def target_interface(
-        peer: Union[DirectPeerDTO, IndirectPeerDTO] | VirtualLocalDTO,
+        peer: DirectPeerDTO | IndirectPeerDTO | VirtualLocalDTO,
         ports: list[str],
 ) -> TargetInterface:
     subif = getattr(peer, "subif", None)
