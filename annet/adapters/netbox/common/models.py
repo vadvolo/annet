@@ -147,7 +147,7 @@ class FHRPGroup(Generic[_DeviceIPT]):
     tags: list[EntityWithSlug]
     custom_fields: dict[str, Any]
     ip_addresses: list[_DeviceIPT]
-    comments: str | None
+    comments: str | None = None
 
 
 _FHRPGroupT = TypeVar("_FHRPGroupT", bound=FHRPGroup)
