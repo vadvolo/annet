@@ -3,16 +3,10 @@ REST API для приложения annet
 Предоставляет HTTP endpoints для команд ann get, ann diff, ann patch и ann deploy
 """
 
-import asyncio
-import json
-import logging
-import os
-import tempfile
-from typing import Dict, List, Optional, Any, Union
+from typing import List, Optional, Any
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Query as QueryParam
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi import FastAPI, HTTPException, Query as QueryParam
 from pydantic import BaseModel, Field
 import uvicorn
 
@@ -114,8 +108,13 @@ async def lifespan(app: FastAPI):
     global _storage_connector, _filterer
     
     # Инициализация
-    _storage_connector, _ = get_storage()
-    _filterer = filtering.filterer_connector.get()
+    try:
+        _storage_connector, _ = get_storage()
+        _filterer = filtering.filterer_connector.get()
+    except RuntimeError as e:
+        print(f"Warning: {e}. Some API endpoints may not work without proper storage configuration.")
+        _storage_connector = None
+        _filterer = None
     
     yield
     

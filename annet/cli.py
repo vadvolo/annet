@@ -340,12 +340,26 @@ def rest_api(args: cli_args.RestApiOptions):
         import uvicorn
         from annet.rest_api import app
         
+        # Преобразуем log_level в строку для uvicorn
+        if isinstance(args.log_level, str):
+            log_level = args.log_level.lower()
+        else:
+            # Преобразуем числовой уровень в строку
+            level_map = {
+                10: "debug",
+                20: "info", 
+                30: "warning",
+                40: "error",
+                50: "critical"
+            }
+            log_level = level_map.get(args.log_level, "info")
+        
         uvicorn.run(
             app,
             host=args.host,
             port=args.port,
             reload=args.reload,
-            log_level=args.log_level.lower()
+            log_level=log_level
         )
     except ImportError:
         print("Error: FastAPI and uvicorn are required to run the REST API server.")
