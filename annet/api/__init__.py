@@ -343,7 +343,7 @@ def diff(
     return pool.run(device_ids, args.tolerate_fails, args.strict_exit_code)
 
 
-def collapse_texts(texts: Mapping[str, Union[str, Generator[str, None, None]]]) -> Mapping[Tuple[str, ...], str]:
+def collapse_texts(texts: Mapping[str, str | Generator[str, None, None]]) -> Mapping[Tuple[str, ...], str]:
     """
     Группировка текстов.
     :param texts:

@@ -7,7 +7,6 @@ from annetbox.v37 import models as api_models, client_sync
 from annet.adapters.netbox.common.adapter import NetboxAdapter, get_device_breed, get_device_hw
 from annet.adapters.netbox.common.storage_base import BaseNetboxStorage
 from annet.storage import Storage
-from typing import Union
 from .models import (
     IpAddressV37, NetboxDeviceV37, InterfaceV37, PrefixV37,
     FHRPGroupAssignmentV37, FHRPGroupV37,

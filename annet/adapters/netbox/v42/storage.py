@@ -126,8 +126,8 @@ class NetboxStorageV42(BaseNetboxStorage[
 
     def __init__(self, opts: Optional[NetboxStorageOpts] = None):
         super().__init__(opts)
-        self._all_vlans: Union[list[Vlan], None] = None
-        self._all_vrfs: Union[list[Vrf], None] = None
+        self._all_vlans: list[Vlan] | None = None
+        self._all_vrfs: list[Vrf] | None = None
 
     def _init_adapter(
             self,
