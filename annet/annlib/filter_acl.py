@@ -6,6 +6,7 @@ from . import patching
 from annet.vendors import tabparser
 from .diff import diff_ops, ops_sign
 from .rbparser import acl
+from typing import Union
 
 UnifiedInputConfig = str  # Конфиг классических сетевых устройств
 FileInputConfig = typing.Dict[str, typing.Any]  # Конфиг вайтбоксов и серверов
@@ -73,7 +74,7 @@ def filter_patch_jun_nokia(diff_filtered: InputConfig, fmtr: tabparser.CommonFor
     for patch_line in text.split("\n"):
         patch_parts = [x for x in patch_line.split(" ") if x]
         diff_current = diff_tree_stripped
-        # strip set|delete|/configure
+        # strip Union[set, delete]|/configure
         while patch_parts and patch_parts[0] in {"/configure", "set", "delete"}:
             patch_parts = patch_parts[1:]
         while patch_parts and diff_current:

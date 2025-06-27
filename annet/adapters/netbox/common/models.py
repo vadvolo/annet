@@ -2,7 +2,7 @@ from abc import abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from ipaddress import ip_interface, IPv6Interface
-from typing import List, Optional, Any, Dict, Sequence, TypeVar, Generic
+from typing import List, Optional, Any, Dict, Sequence, TypeVar, Generic, Union
 
 from annet.annlib.netdev.views.dump import DumpableView
 from annet.annlib.netdev.views.hardware import HardwareView, lag_name
@@ -82,7 +82,7 @@ _PrefixT = TypeVar("_PrefixT", bound=Prefix)
 @dataclass
 class IpAddress(DumpableView, Generic[_PrefixT]):
     id: int
-    assigned_object_id: int | None
+    assigned_object_id: Union[int, None]
     display: str
     family: IpFamily
     address: str
@@ -100,7 +100,7 @@ class IpAddress(DumpableView, Generic[_PrefixT]):
 
 @dataclass
 class InterfaceConnectedEndpoint(Entity):
-    device: Entity | None
+    device: Union[Entity, None]
 
 
 @dataclass
@@ -120,7 +120,7 @@ class InterfaceVlan(Entity):
     vid: int
 
 
-def vrf_object(vrf: str | None) -> Entity | None:
+def vrf_object(vrf: Union[str, None]) -> Union[Entity, None]:
     if vrf is None:
         return None
     else:
@@ -139,15 +139,15 @@ class FHRPGroup(Generic[_DeviceIPT]):
     group_id: int
     display: str
     protocol: str
-    description: str | None
+    description: Union[str, None]
 
     name: str
-    auth_type: str | None
+    auth_type: Union[str, None]
     auth_key: str
     tags: list[EntityWithSlug]
     custom_fields: dict[str, Any]
     ip_addresses: list[_DeviceIPT]
-    comments: str | None = None
+    comments: Union[str, None] = None
 
 
 _FHRPGroupT = TypeVar("_FHRPGroupT", bound=FHRPGroup)
@@ -161,8 +161,8 @@ class FHRPGroupAssignment(Generic[_FHRPGroupT]):
     group: _FHRPGroupT
     fhrp_group_id: int
 
-    interface_type: str | None
-    interface_id: int | None
+    interface_type: Union[str, None]
+    interface_id: Union[int, None]
 
 
 _FHRPGroupAssignmentT = TypeVar(
@@ -184,17 +184,17 @@ class Interface(Entity, Generic[_IpAddressT, _FHRPGroupAssignmentT]):
     tags: List[EntityWithSlug] = field(default_factory=list)
     display: str = ""
     vrf: Optional[Entity] = None
-    mtu: int | None = None
-    lag: Entity | None = None
-    lag_min_links: int | None = None
-    speed: int | None = None
+    mtu: Union[int, None] = None
+    lag: Union[Entity, None] = None
+    lag_min_links: Union[int, None] = None
+    speed: Union[int, None] = None
 
     ip_addresses: List[_IpAddressT] = field(default_factory=list)
     count_ipaddresses: int = 0
     fhrp_groups: List[_FHRPGroupAssignmentT] = field(default_factory=list)
     count_fhrp_groups: int = 0
 
-    def add_addr(self, address_mask: str, vrf: str | None) -> None:
+    def add_addr(self, address_mask: str, vrf: Union[str, None]) -> None:
         addr = ip_interface(address_mask)
 
         # when comparing ip addressess
@@ -219,7 +219,7 @@ class Interface(Entity, Generic[_IpAddressT, _FHRPGroupAssignmentT]):
         self._add_new_addr(address_mask, vrf_obj, family)
 
     @abstractmethod
-    def _add_new_addr(self, address_mask: str, vrf: Entity | None, family: IpFamily):
+    def _add_new_addr(self, address_mask: str, vrf: Union[Entity, None], family: IpFamily):
         raise NotImplementedError
 
 
@@ -297,7 +297,7 @@ class NetboxDevice(Entity, Generic[_InterfaceT, _DeviceIPT]):
     def _lag_name(self, lag: int) -> str:
         return lag_name(self.hw, lag)
 
-    def make_lag(self, lag: int, ports: Sequence[str], lag_min_links: int | None) -> _InterfaceT:
+    def make_lag(self, lag: int, ports: Sequence[str], lag_min_links: Union[int, None]) -> _InterfaceT:
         new_name = self._lag_name(lag)
         for target_interface in self.interfaces:
             if target_interface.name == new_name:

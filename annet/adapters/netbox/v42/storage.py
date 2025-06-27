@@ -1,5 +1,5 @@
 import ssl
-from typing import Optional
+from typing import Optional, Union
 
 from adaptix import P
 from adaptix.conversion import get_converter, link, link_constant, link_function
@@ -23,7 +23,7 @@ class NetboxV42Adapter(NetboxAdapter[
             storage: Storage,
             url: str,
             token: str,
-            ssl_context: ssl.SSLContext | None,
+            ssl_context: ssl.Union[SSLContext, None],
             threads: int,
     ):
         self.netbox = client_sync.NetboxV42(url=url, token=token, ssl_context=ssl_context, threads=threads)
@@ -126,14 +126,14 @@ class NetboxStorageV42(BaseNetboxStorage[
 
     def __init__(self, opts: Optional[NetboxStorageOpts] = None):
         super().__init__(opts)
-        self._all_vlans: list[Vlan] | None = None
-        self._all_vrfs: list[Vrf] | None = None
+        self._all_vlans: Union[list[Vlan], None] = None
+        self._all_vrfs: Union[list[Vrf], None] = None
 
     def _init_adapter(
             self,
             url: str,
             token: str,
-            ssl_context: ssl.SSLContext | None,
+            ssl_context: ssl.Union[SSLContext, None],
             threads: int,
     ) -> NetboxAdapter[
         NetboxDeviceV42, InterfaceV42, IpAddressV42, PrefixV42,

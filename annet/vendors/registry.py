@@ -5,6 +5,7 @@ from annet.annlib.netdev.views.hardware import HardwareView
 from annet.vendors.tabparser import CommonFormatter
 
 from .base import AbstractVendor
+from typing import Union
 
 
 _SENTINEL = enum.Enum("_SENTINEL", "sentinel")
@@ -58,9 +59,9 @@ class Registry:
 
     def match(
         self,
-        hw: HardwareView | str,
-        default: _SENTINEL | AbstractVendor | None = sentinel
-    ) -> AbstractVendor | None:
+        hw: Union[HardwareView, str],
+        default: Union[_SENTINEL, AbstractVendor, None] = sentinel
+    ) -> Union[AbstractVendor, None]:
         if isinstance(hw, str):
             hw = HardwareView(hw, "")
 
@@ -76,7 +77,7 @@ class Registry:
             return GENERIC_VENDOR
         return default
 
-    def get(self, item: str, default: _SENTINEL | AbstractVendor | None = sentinel) -> AbstractVendor | None:
+    def get(self, item: str, default: Union[_SENTINEL, AbstractVendor, None] = sentinel) -> Union[AbstractVendor, None]:
         if item in self:
             return self[item]
         if default is sentinel:

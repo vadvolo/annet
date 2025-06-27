@@ -2,7 +2,7 @@
 import abc
 import itertools
 from collections import namedtuple
-from typing import Dict, List, Optional, Any, OrderedDict, Tuple, Type
+from typing import Dict, List, Optional, Any, OrderedDict, Tuple, Type, Union
 
 from contextlog import get_logger
 
@@ -95,7 +95,7 @@ class Fetcher(abc.ABC):
     @abc.abstractmethod
     async def fetch(self,
                     devices: list[Device],
-                    files_to_download: dict[str, list[str]] | None = None,
+                    files_to_download: Union[dict[str, list[str]], None] = None,
                     processes: int = 1,
                     max_slots: int = 0,
                     ):
@@ -110,7 +110,7 @@ def get_fetcher() -> Fetcher:
 
 class DeployDriver(abc.ABC):
     @abc.abstractmethod
-    async def bulk_deploy(self, deploy_cmds: dict, args: DeployOptions, progress_bar: ProgressBar | None = None) -> DeployResult:
+    async def bulk_deploy(self, deploy_cmds: dict, args: DeployOptions, progress_bar: Union[ProgressBar, None] = None) -> DeployResult:
         pass
 
     @abc.abstractmethod

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 import warnings
 from datetime import datetime, timezone
 from annet.adapters.netbox.common.models import Entity, Interface, \
@@ -35,7 +35,7 @@ class FHRPGroupAssignmentV41(FHRPGroupAssignment[FHRPGroupV41]):
 
 @dataclass
 class InterfaceV41(Interface[IpAddressV41, FHRPGroupAssignmentV41]):
-    def _add_new_addr(self, address_mask: str, vrf: Entity | None, family: IpFamily) -> None:
+    def _add_new_addr(self, address_mask: str, vrf: Union[Entity, None], family: IpFamily) -> None:
         self.ip_addresses.append(IpAddressV41(
             id=0,
             display=address_mask,

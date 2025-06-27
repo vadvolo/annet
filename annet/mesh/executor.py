@@ -24,10 +24,10 @@ logger = getLogger(__name__)
 
 @dataclass(frozen=True)
 class TargetInterface:
-    subif: int | None = None
-    svi: int | None = None
-    lag: int | None = None
-    port: str | None = None
+    subif: Union[int, None] = None
+    svi: Union[int, None] = None
+    lag: Union[int, None] = None
+    port: Union[str, None] = None
 
 
 @dataclass(frozen=True)
@@ -39,7 +39,7 @@ class PeerKey:
 
 
 def target_interface(
-        peer: DirectPeerDTO | IndirectPeerDTO | VirtualLocalDTO,
+        peer: Union[DirectPeerDTO, IndirectPeerDTO] | VirtualLocalDTO,
         ports: list[str],
 ) -> TargetInterface:
     subif = getattr(peer, "subif", None)

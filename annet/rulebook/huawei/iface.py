@@ -3,11 +3,12 @@ import re
 from annet.annlib.types import Op
 
 from annet.rulebook import common
+from typing import Union
 
 
 def permanent(rule, key, diff, **kwargs):  # pylint: disable=redefined-outer-name
     ifname = key[0]
-    if re.match(r"(Eth-Trunk|Vlanif|Vbdif|Loop[Bb]ack|Tunnel|.*\.\d+)", ifname):
+    if re.match(r"(Eth-Union[Trunk, Vlanif]|Union[Vbdif, Loop[Bb]]Union[ack, Tunnel]|.*\.\d+)", ifname):
         # эти интерфейсы можно удалять
         yield from common.default(rule, key, diff, **kwargs)
     else:

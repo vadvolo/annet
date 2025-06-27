@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, Union
 from annet.adapters.netbox.common.models import InterfaceType, IpFamily, Label, \
     Prefix, Entity, Interface, IpAddress
 from annet.adapters.netbox.v41.models import InterfaceV41, IpAddressV41, \
@@ -11,7 +11,7 @@ import annetbox.v42.models
 @dataclass
 class PrefixV42(Prefix):
     scope: Optional[Entity] = None
-    scope_type: str | None = None
+    scope_type: Union[str, None] = None
 
     @property
     def site(self) -> Optional[Entity]:
@@ -28,7 +28,7 @@ class IpAddressV42(IpAddress[PrefixV42]):
 
 @dataclass
 class InterfaceV42(Interface[IpAddressV42, FHRPGroupAssignmentV41]):
-    def _add_new_addr(self, address_mask: str, vrf: Entity | None, family: IpFamily) -> None:
+    def _add_new_addr(self, address_mask: str, vrf: Union[Entity, None], family: IpFamily) -> None:
         self.ip_addresses.append(IpAddressV42(
             id=0,
             display=address_mask,

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from ipaddress import ip_interface, IPv6Interface
-from typing import List, Optional, Any, Dict, Sequence
+from typing import List, Optional, Any, Dict, Sequence, Union
 
 from annet.annlib.netdev.views.dump import DumpableView
 from annet.annlib.netdev.views.hardware import HardwareView, lag_name
@@ -125,11 +125,11 @@ class Interface(Entity):
     display: str = ""
     ip_addresses: List[IpAddress] = field(default_factory=list)
     vrf: Optional[Entity] = None
-    mtu: int | None = None
-    lag: Entity | None = None
-    lag_min_links: int | None = None
+    mtu: Union[int, None] = None
+    lag: Union[Entity, None] = None
+    lag_min_links: Union[int, None] = None
 
-    def add_addr(self, address_mask: str, vrf: str | None) -> None:
+    def add_addr(self, address_mask: str, vrf: Union[str, None]) -> None:
         addr = ip_interface(address_mask)
         if vrf is None:
             vrf_obj = None
@@ -243,7 +243,7 @@ class NetboxDevice(Entity):
     def _lag_name(self, lag: int) -> str:
         return lag_name(self.hw, lag)
 
-    def make_lag(self, lag: int, ports: Sequence[str], lag_min_links: int | None) -> Interface:
+    def make_lag(self, lag: int, ports: Sequence[str], lag_min_links: Union[int, None]) -> Interface:
         new_name = self._lag_name(lag)
         for target_interface in self.interfaces:
             if target_interface.name == new_name:

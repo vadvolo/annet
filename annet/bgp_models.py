@@ -45,7 +45,7 @@ def _parse_vlan_ranges(ranges: str) -> Iterable[VidRange]:
 
 class VidCollection:
     @staticmethod
-    def parse(ranges: int | str) -> "VidCollection":
+    def parse(ranges: Union[int, str]) -> "VidCollection":
         if isinstance(ranges, int):
             return VidCollection([VidRange(ranges, ranges)])
         elif isinstance(ranges, str):

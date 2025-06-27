@@ -178,7 +178,7 @@ class Orderer:
     def rule_weight(self, row, rule, regexp_key):
         return len(set(row).intersection(set(rule["attrs"][regexp_key].pattern))) / len(row)
 
-    def get_order(self, row, cmd_direct, scope: str | None = None):
+    def get_order(self, row, cmd_direct, scope: Union[str, None] = None):
         f_order = None
         f_weight = 0
         f_rule = ""

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 
 FIRST_EXCEPTION = 1
@@ -17,7 +17,7 @@ class Question:
 
 @dataclass
 class Command:
-    cmd: str | bytes
+    cmd: Union[str, bytes]
     questions: Optional[List[Question]] = None
     exc_handler: Optional[List[Question]] = None
     timeout: Optional[int] = None  # total timeout
