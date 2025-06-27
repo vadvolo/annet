@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Union
+from typing import Any
 
 from annet.annlib.netdev.views.hardware import HardwareView
 from annet.vendors import registry_connector

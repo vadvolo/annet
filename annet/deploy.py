@@ -2,7 +2,7 @@
 import abc
 import itertools
 from collections import namedtuple
-from typing import Dict, List, Optional, Any, OrderedDict, Tuple, Type, Union
+from typing import Dict, List, Optional, Any, OrderedDict, Tuple, Type
 
 from contextlog import get_logger
 

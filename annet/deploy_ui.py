@@ -12,7 +12,7 @@ import traceback
 from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 
 from contextlog import get_logger
 
@@ -356,7 +356,7 @@ def init_colors():
 
 @dataclass
 class Tile:
-    win: "curses.Union[window, None]"
+    win: "curses.window | None"
     content: list[list[TextArgs]]
     title: list[str]
     height: int
@@ -383,7 +383,7 @@ class ProgressBars(ProgressBar):
     def __init__(self, tiles_params: dict[str, dict[Any, Any]]):
         self.tiles_params = tiles_params
         self.mode: TailMode = TailMode.UNIFORM
-        self.screen: "curses.Union[window, None]" = None
+        self.screen: "curses.window | None" = None
         self.tiles: dict[str, Tile] = {}
         self.offset = [0, 0]
         self.terminal_refresher_coro = None
@@ -770,7 +770,7 @@ class ProgressBars(ProgressBar):
 
 def draw_lines_in_win(
         lines: list[list[TextArgs]],
-        win: "curses.Union[window, None]",
+        win: "curses.window | None",
         color_to_curses: dict[Optional[str], int],
         margin: int = 0,
         x_margin: int = 0,

@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from annetbox.v24 import models as api_models
 from annetbox.v24.client_sync import NetboxV24
@@ -142,7 +142,7 @@ class NetboxStorageV24(Storage):
 
     def make_devices(
             self,
-            query: NetboxQuery | list,
+            query: Union[NetboxQuery, list],
             preload_neighbors=False,
             use_mesh=None,
             preload_extra_fields=False,

@@ -62,7 +62,7 @@ class Concat(Merger):
 
 class Unite(Merger):
     def _merge(self, name: str, x: T, y: T) -> T:
-        return Union[x, y]  # type: ignore[operator]
+        return x | y  # type: ignore[operator]
 
 
 class Merge(Merger):

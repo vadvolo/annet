@@ -157,7 +157,7 @@ def run_partial_generators(
 
 
 @tracing.function(name="run_partial_generator")
-def _run_partial_generator(gen: "PartialGenerator", run_args: GeneratorPartialRunArgs) -> Union[GeneratorPartialResult, None]:
+def _run_partial_generator(gen: "PartialGenerator", run_args: GeneratorPartialRunArgs) -> GeneratorPartialResult | None:
     logger = get_logger(generator=_make_generator_ctx(gen))
     device = run_args.device
     output = ""

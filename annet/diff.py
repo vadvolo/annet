@@ -184,7 +184,7 @@ def collapse_diffs(diffs: Mapping[Device, Diff]) -> Dict[Tuple[Device, ...], Dif
 
 class FileDiffer(Protocol):
     @abc.abstractmethod
-    def diff_file(self, hw: HardwareView, path: Union[str, Path], old: str, new: str) -> list[str]:
+    def diff_file(self, hw: HardwareView, path: str | Path, old: str, new: str) -> list[str]:
         raise NotImplementedError
 
 
@@ -192,7 +192,7 @@ class UnifiedFileDiffer(FileDiffer):
     def __init__(self):
         self.context: int = 3
 
-    def diff_file(self, hw: HardwareView, path: Union[str, Path], old: str, new: str) -> list[str]:
+    def diff_file(self, hw: HardwareView, path: str | Path, old: str, new: str) -> list[str]:
         """Calculate the differences for config files.
 
         Args:
@@ -216,7 +216,7 @@ class UnifiedFileDiffer(FileDiffer):
 
 
 class FrrFileDiffer(UnifiedFileDiffer):
-    def diff_file(self, hw: HardwareView, path: Union[str, Path], old: str, new: str) -> list[str]:
+    def diff_file(self, hw: HardwareView, path: str | Path, old: str, new: str) -> list[str]:
         if (hw.PC.Mellanox or hw.PC.NVIDIA) and (path == "/etc/frr/frr.conf"):
             return self._diff_frr_conf(hw, old, new)
         return super().diff_file(hw, path, old, new)
