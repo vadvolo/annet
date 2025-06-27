@@ -7,6 +7,7 @@ import logging
 import os
 
 from valkit.common import valid_string_list
+from valkit.python import valid_logging_level
 
 import annet.lib
 from annet.argparse import Arg, ArgGroup, DefaultFromEnv
@@ -508,3 +509,31 @@ class DeployOptions(ShowDiffOptions, PatchOptions, DeviceCliOptions):
 
 class SelectContext(ArgGroup):
     context_name = opt_selected_context_name
+
+
+opt_rest_api_host = Arg(
+    "--host", default="127.0.0.1",
+    help="Host to bind the REST API server to"
+)
+
+opt_rest_api_port = Arg(
+    "--port", type=int, default=8000,
+    help="Port to bind the REST API server to"
+)
+
+opt_rest_api_reload = Arg(
+    "--reload", default=False,
+    help="Enable auto-reload for development"
+)
+
+opt_rest_api_log_level = Arg(
+    "--log-level", default="INFO", type=valid_logging_level,
+    help="Log level for the REST API server"
+)
+
+
+class RestApiOptions(ArgGroup):
+    host = opt_rest_api_host
+    port = opt_rest_api_port
+    reload = opt_rest_api_reload
+    log_level = opt_rest_api_log_level

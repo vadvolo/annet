@@ -331,3 +331,26 @@ def context_edit():
 def context_repair():
     """ Try to fix the context file's structure if it was generated for the older versions of annet """
     repair_context_file()
+
+
+@subcommand(cli_args.RestApiOptions)
+def rest_api(args: cli_args.RestApiOptions):
+    """ Start REST API server for annet commands """
+    try:
+        import uvicorn
+        from annet.rest_api import app
+        
+        uvicorn.run(
+            app,
+            host=args.host,
+            port=args.port,
+            reload=args.reload,
+            log_level=args.log_level.lower()
+        )
+    except ImportError:
+        print("Error: FastAPI and uvicorn are required to run the REST API server.")
+        print("Install them with: pip install fastapi uvicorn")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error starting REST API server: {e}")
+        sys.exit(1)
