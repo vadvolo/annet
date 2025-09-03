@@ -72,6 +72,11 @@ bfd
 
 observe-port *
 
+drop-profile *
+    color *
+    ecn weight
+    ecn
+
 qos local-precedence-queue-map *
 
 qos group %logic=huawei.misc.undo_children
@@ -200,9 +205,11 @@ aaa
 
 hwtacacs-server template *
     hwtacacs-server shared-key
+    hwtacacs-server source-ip
 
 hwtacacs server template *
     hwtacacs server shared-key
+    hwtacacs server source-ip
 
 !radius-server template default
 
@@ -428,6 +435,12 @@ isis *
 
 error-down auto-recovery cause link-flap
 
+configuration file auto-save backup-to-server server
+configuration file auto-save
+
+
+set save-configuration backup-to-server *
+set save-configuration *
 
 ip route-static default-bfd
 ipv6 route-static default-bfd
