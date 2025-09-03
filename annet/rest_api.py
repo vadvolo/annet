@@ -3,7 +3,7 @@ REST API для приложения annet
 Предоставляет HTTP endpoints для команд ann get, ann diff, ann patch и ann deploy
 """
 
-from typing import List, Optional, Any
+from typing import Dict, List, Optional, Any
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query as QueryParam
@@ -16,6 +16,7 @@ from annet.gen import Loader
 from annet.storage import get_storage, Query
 from annet.api import Deployer
 from annet.output import output_driver_connector
+from annet.argparse import Arg
 
 
 # Модели данных для API
@@ -178,6 +179,7 @@ def _create_cli_args(query_data: DeviceQuery, options: GenerationOptions, args_c
         'no_acl_exclusive': False,
         'max_tasks': None,
         'ignore_disabled': False,
+        'show_hosts_progress': False,
     }
     
     # Добавляем специфичные для diff опции
@@ -213,20 +215,30 @@ def _create_cli_args(query_data: DeviceQuery, options: GenerationOptions, args_c
         })
     
     # Создаем объект аргументов нужного типа
-    class MockArgs:
-        def __init__(self, **kwargs):
-            for key, value in kwargs.items():
-                setattr(self, key, value)
-            self._enum_args = []
-        
-        def stdin(self, filter_acl=None, config=None):
-            return {
-                'filter_acl': None,
-                'config': None,
-            }
-    
     return MockArgs(**args_dict)
 
+class MockArgs:
+    def __init__(self, **kwargs):
+        print("KWARGS", kwargs)
+        for key, value in kwargs.items():
+            print(key, value)
+            setattr(self, key, value)
+        # self._enum_args = {}
+    
+    def stdin(self, filter_acl=None, config=None):
+        return {
+            'filter_acl': None,
+            'config': None,
+        }
+    
+    @classmethod
+    def _enum_args(cls) -> Dict[str, Arg]:
+        ret = {}
+        for base in cls.__mro__:
+            for name, value in vars(base).items():
+                if not name.startswith("_") and isinstance(value, Arg):
+                    ret[name] = value
+        return ret
 
 @app.get("/", response_model=ApiResponse)
 async def root():
