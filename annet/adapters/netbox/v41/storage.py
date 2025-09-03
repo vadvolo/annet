@@ -1,8 +1,8 @@
 import ssl
 from adaptix import P
 from adaptix.conversion import get_converter, link, link_constant, link_function
-from annetbox.v41 import client_sync
-from annetbox.v41 import models as api_models
+# from annetbox.v41 import client_sync
+# from annetbox.v41 import models as api_models
 
 from annet.adapters.netbox.common.adapter import NetboxAdapter, get_device_breed, get_device_hw
 from annet.adapters.netbox.common.storage_base import BaseNetboxStorage
