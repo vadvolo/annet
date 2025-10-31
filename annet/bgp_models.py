@@ -201,6 +201,24 @@ class PeerOptions:
     not_active: Optional[bool] = None
     mtu: Optional[int] = None
     password: Optional[str] = None
+    cluster_id: Optional[str] = None
+
+
+@dataclass
+class PeerFamilyOption:
+    af_loops: Optional[int] = None
+    import_limit: Optional[int] = None
+
+
+@dataclass
+class PeerFamilyOptions:
+    ipv4_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    ipv6_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    ipv4_vpn_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    ipv6_vpn_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    ipv4_labeled_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    ipv6_labeled_unicast: PeerFamilyOption = field(default_factory=PeerFamilyOption)
+    l2vpn_evpn: PeerFamilyOption = field(default_factory=PeerFamilyOption)
 
 
 @dataclass
@@ -209,6 +227,7 @@ class Peer:
     interface: Optional[str]
     remote_as: ASN
     families: set[Family] = field(default_factory=set)
+    family_options: PeerFamilyOptions = field(default_factory=PeerFamilyOptions)
     description: str = ""
     vrf_name: str = ""
     group_name: str = ""
@@ -264,6 +283,7 @@ class PeerGroup:
     name: str
     remote_as: ASN = ASN(None)
     families: set[Family] = field(default_factory=set)
+    family_options: PeerFamilyOptions = field(default_factory=PeerFamilyOptions)
     internal_name: str = ""
     description: str = ""
     update_source: str = ""
@@ -320,6 +340,7 @@ class PeerGroup:
     not_active: bool = False
     mtu: int = 0
     password: Optional[str] = None
+    cluster_id: Optional[str] = None
 
 
 @dataclass
@@ -371,6 +392,8 @@ class GlobalOptions:
     loops: int = 0
     multipath: int = 0
     router_id: str = ""
+    cluster_id: Optional[str] = None
+
     vrf: dict[str, VrfOptions] = field(default_factory=dict)
     groups: list[PeerGroup] = field(default_factory=list)
     l2vpn: dict[str, L2VpnOptions] = field(default_factory=dict)

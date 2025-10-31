@@ -267,11 +267,20 @@ def _old_new_per_device(ctx: OldNewDeviceContext, device: Device, filterer: Filt
             filters = filters_text.removesuffix("\n").split("\n")
 
         old_json_fragment_files = old_files.json_fragment_files.copy()
-        new_json_fragment_files = res.new_json_fragment_files(old_json_fragment_files, filters=filters)
+        new_json_fragment_files = res.new_json_fragment_files(
+            old_json_fragment_files,
+            use_acl=not ctx.args.no_acl,
+            filters=filters,
+        )
 
         if ctx.args.acl_safe:
             safe_new_files = res.new_files(safe=True)
-            safe_new_json_fragment_files = res.new_json_fragment_files(old_json_fragment_files, safe=True, filters=filters)
+            safe_new_json_fragment_files = res.new_json_fragment_files(
+                old_json_fragment_files,
+                use_acl=not ctx.args.no_acl,
+                safe=True,
+                filters=filters,
+            )
 
     if ctx.args.profile:
         perf = res.perf_mesures()
@@ -489,8 +498,7 @@ def worker(device_id, args: ShowGenOptions, stdin, loader: "Loader", filterer: F
         # Consider result of partial run empty and create an empty dest file
         # only if there are some acl rules that has been matched.
         # Otherwise treat it as if no supported generators have been found.
-        acl_rules = res.get_acl_rules(args.acl_safe)
-        if acl_rules:
+        if args.no_acl or res.get_acl_rules(args.acl_safe):
             orderer = patching.Orderer.from_hw(device.hw)
             yield (output_driver.cfg_file_names(device)[0],
                    format_config_blocks(
