@@ -31,6 +31,7 @@ L2VPN = "evpn1"
 
 def on_device_x(device: GlobalOptions):
     device.vrf[VRF].export_policy = EXPORT_POLICY1
+    device.vrf[VRF].ipv4_unicast.export_policy = EXPORT_POLICY2
     device.vrf[VRF].groups[GROUP].mtu = 1499
     device.vrf[VRF].groups[GROUP].local_as = 11111
     device.vrf[VRF].groups[GROUP].remote_as = 22222
@@ -42,6 +43,7 @@ def on_device_x(device: GlobalOptions):
     device.vrf[VRF].as_path_relax = True
     device.ipv6_unicast.aggregate.policy = EXPORT_POLICY2
     device.ipv6_unicast.af_loops = 17
+    device.cluster_id = "10.3.2.1"
     device.ipv6_unicast.aggregates = (Aggregate(
         routes=("192.168.1.0/24", ),
         as_set=True,
@@ -57,6 +59,8 @@ def on_direct(local: DirectPeer, neighbor: DirectPeer, session: MeshSession):
     local.addr = "192.168.1.254"
     neighbor.addr = "192.168.1.1"
     local.mtu = 1501
+    local.family_options.ipv4_unicast.af_loops = 44
+    local.cluster_id = "10.2.3.4"
     neighbor.mtu = 1502
     session.asnum = 12345
     session.bfd_timers = BFDTimers(multiplier=1)
@@ -67,6 +71,8 @@ def on_direct_alt(local: DirectPeer, neighbor: DirectPeer, session: MeshSession)
     local.addr = "192.168.1.254"
     neighbor.addr = "192.168.1.2"
     local.mtu = 1501
+    local.family_options.ipv4_unicast.af_loops = 44
+    local.cluster_id = "10.2.3.4"
     neighbor.mtu = 1502
     session.asnum = 12345
     session.families = {"ipv4_labeled_unicast"}
@@ -77,6 +83,8 @@ def on_indirect(local: IndirectPeer, neighbor: IndirectPeer, session: MeshSessio
     local.svi = 100
     local.import_limit = 42
     local.import_limit_action = "stub"
+    local.family_options.ipv4_unicast.af_loops = 44
+    local.cluster_id = "10.2.3.4"
     neighbor.addr = "192.168.2.10"
     local.mtu = 1505
     neighbor.mtu = 1506
@@ -88,6 +96,8 @@ def on_indirect_alt(local: IndirectPeer, neighbor: IndirectPeer, session: MeshSe
     local.addr = "192.168.2.254"
     neighbor.addr = "192.168.2.11"
     local.mtu = 1506
+    local.family_options.ipv4_unicast.af_loops = 44
+    local.cluster_id = "10.2.3.4"
     neighbor.mtu = 1507
     session.asnum = 12340
     session.families = {"ipv6_unicast"}
@@ -97,7 +107,9 @@ def on_virtual(local: VirtualLocal, virtual: VirtualPeer, session: MeshSession):
     local.svi = 1
     local.addr = "192.168.3.254"
     local.mtu = 1506
+    local.family_options.ipv4_unicast.af_loops = 44
     local.listen_network = ["10.0.0.0/8"]
+    local.cluster_id = "10.2.3.4"
     virtual.addr = f"192.168.3.{virtual.num}"
     session.asnum = 12340
     session.families = {"ipv6_unicast"}
@@ -172,6 +184,7 @@ def test_storage(registry, storage, device1):
         as_set=True,
     ), Aggregate())
     assert res.global_options.ipv4_unicast.aggregates == ()
+    assert res.global_options.cluster_id == "10.3.2.1"
 
     assert res.global_options.groups == []
     assert res.global_options.vrf.keys() == {VRF}
@@ -180,6 +193,8 @@ def test_storage(registry, storage, device1):
     assert vrf.static_label is None
     assert vrf.export_policy == EXPORT_POLICY1
     assert vrf.import_policy == ""
+    assert vrf.ipv4_unicast.export_policy == EXPORT_POLICY2
+    assert vrf.ipv6_unicast.export_policy == None
     assert len(vrf.groups) == 1
     assert vrf.groups[0].mtu == 1499
     assert vrf.groups[0].local_as == 11111
@@ -238,6 +253,7 @@ def test_storage(registry, storage, device1):
     assert peer_indirect_alt.remote_as == 12340
     assert peer_indirect_alt.description == ""
     assert peer_indirect_alt.interface is None
+    assert peer_indirect.options.cluster_id == "10.2.3.4"
 
     assert len(virtual) == 3
     assert virtual[0].addr == "192.168.3.10"
@@ -247,6 +263,15 @@ def test_storage(registry, storage, device1):
         assert peer.options.local_as == 12340
         assert peer.interface == "Vlan1"
         assert peer.options.listen_network == ["10.0.0.0/8"]
+        assert peer.options.cluster_id == "10.2.3.4"
+
+
+def test_peer_group_family_options(registry, storage, device1):
+    r = MeshExecutor(registry, storage)
+    res = r.execute_for(device1)
+
+    peer_direct, peer_direct_alt, peer_indirect, peer_indirect_alt, *virtual = res.peers
+    assert peer_direct.family_options.ipv4_unicast.af_loops == 44
 
 
 @pytest.fixture()

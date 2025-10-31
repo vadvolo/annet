@@ -1,5 +1,7 @@
 import ssl
-from typing import Optional
+from typing import Callable, Optional
+
+from requests import Session
 
 from adaptix import P
 from adaptix.conversion import get_converter, link, link_constant, link_function
@@ -25,8 +27,9 @@ class NetboxV42Adapter(NetboxAdapter[
             token: str,
             ssl_context: ssl.SSLContext | None,
             threads: int,
+            session_factory: Callable[[Session], Session] | None,
     ):
-        self.netbox = client_sync.NetboxV42(url=url, token=token, ssl_context=ssl_context, threads=threads)
+        self.netbox = client_sync.NetboxV42(url=url, token=token, ssl_context=ssl_context, threads=threads, session_factory=session_factory)
         self.convert_device = get_converter(
             api_models.Device,
             NetboxDeviceV42,
@@ -72,10 +75,11 @@ class NetboxV42Adapter(NetboxAdapter[
             list[FHRPGroupV41],
         )
 
-    def list_all_fqdns(self) -> list[str]:
+    def list_fqdns(self, query: dict[str, list[str]] | None = None) -> list[str]:
+        query = query or {}
         return [
             d.name
-            for d in self.netbox.dcim_all_devices_brief().results
+            for d in self.netbox.dcim_all_devices_brief(**query).results
         ]
 
     def list_devices(self, query: dict[str, list[str]]) -> list[NetboxDeviceV42]:
@@ -135,11 +139,12 @@ class NetboxStorageV42(BaseNetboxStorage[
             token: str,
             ssl_context: ssl.SSLContext | None,
             threads: int,
+            session_factory: Callable[[Session], Session] | None = None,
     ) -> NetboxAdapter[
         NetboxDeviceV42, InterfaceV42, IpAddressV42, PrefixV42,
         FHRPGroupV41, FHRPGroupAssignmentV41,
     ]:
-        return NetboxV42Adapter(self, url, token, ssl_context, threads)
+        return NetboxV42Adapter(self, url, token, ssl_context, threads, session_factory)
 
     def resolve_all_vlans(self) -> list[Vlan]:
         if self._all_vlans is None:

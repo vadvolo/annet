@@ -36,6 +36,8 @@ class FamilyOptions(BaseMeshModel):
     rib_group: bool
     loops: int
     advertise_bgp_static: bool
+    import_policy: Optional[str]
+    export_policy: Optional[str]
 
 
 class _FamiliesMixin:
@@ -106,6 +108,7 @@ class GlobalOptionsDTO(_FamiliesMixin, BaseMeshModel):
     loops: int
     multipath: int
     router_id: str
+    cluster_id: Optional[str]
     vrf: Annotated[dict[str, VrfOptions], DictMerge(Merge())]
     groups: Annotated[dict[str, MeshPeerGroup], DictMerge(Merge())]
     l2vpn: Annotated[dict[str, L2VpnOptions], DictMerge(Merge())]
