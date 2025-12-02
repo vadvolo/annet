@@ -347,6 +347,11 @@ opt_fails_only = Arg(
     help="Показать только устройства с ошибками"
 )
 
+opt_include_missing = Arg(
+    "--include-missing", default=False,
+    help="Include files that exist in only one directory"
+)
+
 opt_connect_timeout = Arg(
     "--connect-timeout", default=DefaultFromEnv("ANN_CONNECT_TIMEOUT", "20.0"), type=float,
     help="Timeout for connecting to a device, in seconds."
@@ -463,6 +468,7 @@ class FileInputOptions(ArgGroup):
     new = opt_new
     hw = opt_hw
     fails_only = opt_fails_only
+    include_missing = opt_include_missing
 
 
 class PatchOptions(DiffOptions):
